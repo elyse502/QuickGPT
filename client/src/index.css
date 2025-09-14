@@ -6,6 +6,8 @@
   font-family: "Outfit", sans-serif;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #e6ccff;
 }
