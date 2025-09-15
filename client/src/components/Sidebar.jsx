@@ -4,7 +4,8 @@ import { assets } from "../assets/assets";
 import moment from "moment";
 
 const Sidebar = () => {
-  const { chats, setSelectedChat, theme, setTheme, user } = useAppContext();
+  const { chats, setSelectedChat, theme, setTheme, user, navigate } =
+    useAppContext();
   const [search, setSearch] = useState("");
 
   return (
@@ -70,6 +71,43 @@ const Sidebar = () => {
               />
             </div>
           ))}
+      </div>
+
+      {/* Community Images */}
+      <div
+        onClick={() => {
+          navigate("/community");
+        }}
+        className="flex  items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-md cursor-pointer hover:scale-103 transition-all"
+      >
+        <img
+          src={assets.gallery_icon}
+          alt="gallery"
+          className="w-4.5 not-dark:invert"
+        />
+        <div className="flex flex-col text-sm">
+          <p>Community Images</p>
+        </div>
+      </div>
+
+      {/* Credit Purchases Option */}
+      <div
+        onClick={() => {
+          navigate("/credits");
+        }}
+        className="flex  items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-md cursor-pointer hover:scale-103 transition-all"
+      >
+        <img
+          src={assets.diamond_icon}
+          alt="diamond"
+          className="w-4.5 dark:invert"
+        />
+        <div className="flex flex-col text-sm">
+          <p>Credits : {user?.credits}</p>
+          <p className="text-xs text-gray-400">
+            Purchase credits to use quickgpt
+          </p>
+        </div>
       </div>
     </div>
   );
