@@ -3,13 +3,17 @@ import { useAppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import moment from "moment";
 
-const Sidebar = () => {
+const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
   const { chats, setSelectedChat, theme, setTheme, user, navigate } =
     useAppContext();
   const [search, setSearch] = useState("");
 
   return (
-    <div className="flex flex-col h-screen min-w-72 p-5 dark:bg-gradient-to-b from-[#242124]/30 to-[#000000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500 max-md:absolute left-0 z-1]">
+    <div
+      className={`flex flex-col h-screen min-w-72 p-5 dark:bg-gradient-to-b from-[#242124]/30 to-[#000000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500 max-md:absolute left-0 z-1 ${
+        !isMenuOpen && "max-md:-translate-x-full"
+      }`}
+    >
       {/* Logo */}
       <img
         src={theme === "dark" ? assets.logo_full : assets.logo_full_dark}
@@ -146,6 +150,13 @@ const Sidebar = () => {
           />
         )}
       </div>
+
+      <img
+        onClick={() => setIsMenuOpen(false)}
+        src={assets.close_icon}
+        alt="close"
+        className="absolute top-3 right-3 w-5 h-5 cursor-pointer md:hidden not-dark:invert"
+      />
     </div>
   );
 };
