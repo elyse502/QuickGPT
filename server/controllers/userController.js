@@ -49,3 +49,13 @@ export const loginUser = async (req, res) => {
     return res.json({ success: false, message: error.message });
   }
 };
+
+// API to get user data
+export const getUser = async (req, res) => {
+  try {
+    const user = req.user;
+    return res.json({ success: true, user });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
