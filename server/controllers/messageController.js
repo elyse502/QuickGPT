@@ -7,6 +7,15 @@ import imagekit from "../configs/imageKit.js";
 export const textMessageController = async (req, res) => {
   try {
     const userId = req.user._id;
+
+    // Check credits
+    if (req.user.credits < 1) {
+      return res.json({
+        success: false,
+        message: "You don't have enough credits to use this feature",
+      });
+    }
+
     const { chatId, prompt } = req.body;
 
     const chat = await Chat.findOne({ userId, _id: chatId });
