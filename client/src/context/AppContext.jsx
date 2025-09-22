@@ -93,8 +93,13 @@ export const AppContextProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    if (token) {
+      fetchUser();
+    } else {
+      setUser(null);
+      setLoadingUser(false);
+    }
+  }, [token]);
 
   const value = {
     navigate,
@@ -107,6 +112,12 @@ export const AppContextProvider = ({ children }) => {
     setSelectedChat,
     theme,
     setTheme,
+    createNewChat,
+    loadingUser,
+    fetchUsersChats,
+    token,
+    setToken,
+    axios,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
