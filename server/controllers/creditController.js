@@ -1,3 +1,6 @@
+import Transaction from "../models/Transaction.js";
+import Stripe from "stripe";
+
 const plans = [
   {
     _id: "basic",
@@ -43,6 +46,59 @@ const plans = [
 export const getPlans = async (req, res) => {
   try {
     res.json({ success: true, plans });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+// API Controller for purchasing a plan
+export const purchasePlan = async (req, res) => {
+  try {
+    const { planId } = req.body;
+    const userId = req.user._id;
+    const plan = plans.find((plan) => plan._id === planId);
+
+    if (!plan) {
+      return res.json({ success: false, message: "Invalid plan" });
+    }
+
+    // Create new Transaction
+    const transaction = await Transaction.create({
+      userId,
+      planId: plan._id,
+      amount: plan.price,
+      credits: plan.credits,
+      isPaid: false,
+    });
+
+    const { origin } = req.headers; // Frontend URL
+
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            unit_amount: plan.price * 100,
+            product_data: {
+              name: plan.name,
+            },
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: `${origin}/loading`,
+      cancel_url: `${origin}`,
+      metadata: {
+        transactionId: transaction._id.toString(),
+        appId: "quickgpt",
+      },
+      expires_at: Math.floor(Date.now() / 1000) + 30 * 60, // 30 minutes from now
+    });
+
+    res.json({ success: true, url: session.url });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
