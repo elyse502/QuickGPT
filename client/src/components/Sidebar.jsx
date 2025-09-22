@@ -2,11 +2,29 @@ import { useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import moment from "moment";
+import toast from "react-hot-toast";
 
 const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
-  const { chats, setSelectedChat, theme, setTheme, user, navigate } =
-    useAppContext();
+  const {
+    chats,
+    setSelectedChat,
+    theme,
+    setTheme,
+    user,
+    navigate,
+    createNewChat,
+    axios,
+    setChats,
+    fetchUsersChats,
+    setToken,
+  } = useAppContext();
   const [search, setSearch] = useState("");
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    toast.success("Logged out successfully");
+  };
 
   return (
     <div
@@ -151,6 +169,7 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
         </p>
         {user && (
           <img
+            onClick={logout}
             src={assets.logout_icon}
             alt="logout"
             className="h-5 cursor-pointer hidden not-dark:invert group-hover:block"
