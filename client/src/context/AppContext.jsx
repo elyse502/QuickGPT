@@ -36,6 +36,20 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  const createNewChat = async () => {
+    try {
+      if (!user) return toast("Login to create a new chat");
+      navigate("/");
+
+      await axios.get("/api/chat/create", {
+        headers: { Authorization: token },
+      });
+      await fetchUsersChats();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   const fetchUsersChats = async () => {
     setChats(dummyChats);
     setSelectedChat(dummyChats[0]);
